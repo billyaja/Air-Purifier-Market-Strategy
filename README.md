@@ -1,4 +1,5 @@
 # 🌬️ AirPure Innovations: India Market Entry Strategy
+[**Click Here to View Dashboard** ](https://app.powerbi.com/view?r=eyJrIjoiNDFlYmFhZTgtY2JlMC00NDcwLWFiMGUtOTk3MDExY2IyZjRlIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9)
 
 ![Status](https://img.shields.io/badge/Status-Complete-success)
 ![Tools](https://img.shields.io/badge/Tools-Python%20|%20PowerBI%20|%20Pandas-blue)
@@ -93,4 +94,4 @@ To ensure scalability, the analysis moved from flat files to a Star Schema archi
 ---
 **Created By:** [Billy Erickson Samosir](https://www.linkedin.com/in/billyerickson/)
 
-[**Click Here to View Dashboard** ](https://app.powerbi.com/view?r=eyJrIjoiNDFlYmFhZTgtY2JlMC00NDcwLWFiMGUtOTk3MDExY2IyZjRlIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9)
+
