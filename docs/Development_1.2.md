@@ -28,6 +28,8 @@ Source filenames were converted to snake_case to simplify Power Query (M) and Py
 ## 3. Power BI Architecture: Multi-Grain Star Schema
 
 To ensure high performance and accurate filtering across disparate time-scales, we implemented a Star Schema with specialized "Grain Bridges":
+
+
 ![data_model](/docs/images/data_model.png)
 
 - **Fact Tables:** `stg_aqi` (Daily), `stg_health` (Weekly), `stg_vehicles` (Monthly), `stg_population` (Monthly).
@@ -43,4 +45,5 @@ To ensure high performance and accurate filtering across disparate time-scales, 
 ## 5. Python-to-BI Integration
 
 - Developed automated ingestion scripts to perform cross-dataset correlation analysis.
+
 - Exported processed feature sets to `../data/processed/` to enhance the Power BI model with advanced analytical attributes derived during EDA.
