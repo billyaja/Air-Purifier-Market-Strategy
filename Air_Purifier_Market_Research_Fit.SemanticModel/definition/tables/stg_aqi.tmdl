@@ -1,0 +1,100 @@
+table stg_aqi
+	lineageTag: 595c4589-a638-4448-a307-892abd6021e2
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 88747543-b100-4eb3-b90c-b21314adcc57
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column state
+		dataType: string
+		lineageTag: badb46ec-d72d-4c6d-9e24-05685a6c3d3d
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column area
+		dataType: string
+		lineageTag: 6e84a835-3804-4a41-b7e4-0d521a55c7d6
+		summarizeBy: none
+		sourceColumn: area
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_monitoring_stations
+		dataType: int64
+		formatString: 0
+		lineageTag: 113aedbf-f34c-4a18-8aa4-479968223021
+		summarizeBy: sum
+		sourceColumn: number_of_monitoring_stations
+
+		annotation SummarizationSetBy = Automatic
+
+	column prominent_pollutants
+		dataType: string
+		lineageTag: af4af055-7bee-4531-bb60-ead9abfbdd36
+		summarizeBy: none
+		sourceColumn: prominent_pollutants
+
+		annotation SummarizationSetBy = Automatic
+
+	column aqi_value
+		dataType: double
+		formatString: 0
+		lineageTag: 19c95908-86ba-4ac7-afc0-060abb2ffe52
+		summarizeBy: sum
+		sourceColumn: aqi_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column air_quality_status
+		dataType: string
+		lineageTag: 90b2cfb9-4ce4-4894-9a5f-4af5b5b5cbb0
+		summarizeBy: none
+		sourceColumn: air_quality_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		lineageTag: 3be498f9-cd37-4e9e-9e4f-208c45a0392f
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		lineageTag: 2b0e4c4c-48b6-40e4-82d9-8ad11a8ef3cb
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	partition stg_aqi = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files(#"Source Folder"),
+				    #"D:\Air Purifier\data\raw\_aqi_daily_india csv" = Source{[#"Folder Path"="D:\Air Purifier\data\raw\",Name="aqi_daily_india.csv"]}[Content],
+				    #"Imported CSV" = Csv.Document(#"D:\Air Purifier\data\raw\_aqi_daily_india csv",[Delimiter=",", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type with Locale" = Table.TransformColumnTypes(#"Promoted Headers", {{"aqi_value", type number}}, "en-US"),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Changed Type with Locale",{{"date", type date}}),
+				    #"Split Column by Delimiter" = Table.ExpandListColumn(Table.TransformColumns(#"Changed Type", {{"prominent_pollutants", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), let itemType = (type nullable text) meta [Serialized.Text = true] in type {itemType}}}), "prominent_pollutants"),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"state", type text}, {"area", type text}, {"number_of_monitoring_stations", Int64.Type}, {"prominent_pollutants", type text}, {"air_quality_status", type text}, {"unit", type text}, {"note", type text}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Changed Type1",{{"prominent_pollutants", Text.Trim, type text}})
+				in
+				    #"Trimmed Text"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

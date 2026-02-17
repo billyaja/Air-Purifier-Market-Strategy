@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "b69e4b224e8b2394795f",
+  "displayName": "Forecast Seasonality",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "5760f17a4f52932ce3c0",
+      "target": "4df29e12f669a68c583c",
+      "type": "DataFilter"
+    }
+  ]
+}

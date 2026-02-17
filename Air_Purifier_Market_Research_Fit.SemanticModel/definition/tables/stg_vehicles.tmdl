@@ -1,0 +1,102 @@
+table stg_vehicles
+	lineageTag: d3af08e4-680d-49ec-9587-008f5582c6f4
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 76d0db23-a2d8-4386-8415-31bff2edb178
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: string
+		lineageTag: 8b6ed534-0a99-4f95-b412-3a4c08068375
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 5e5ae358-914c-4988-86e8-24526dbc052b
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column rto
+		dataType: string
+		lineageTag: 1d980626-4acc-47dc-9ce1-5be6d65245f4
+		summarizeBy: none
+		sourceColumn: rto
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_class
+		dataType: string
+		lineageTag: d7f33b31-791e-4597-bee5-7427703fa814
+		summarizeBy: none
+		sourceColumn: vehicle_class
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel
+		dataType: string
+		lineageTag: e1aa3252-9427-46f7-a324-d07c7402ea1f
+		summarizeBy: none
+		sourceColumn: fuel
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: int64
+		formatString: 0
+		lineageTag: 5cf984b1-1338-4846-b408-2c8a3b2ffcb7
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		lineageTag: 09747b11-1c5c-4f3f-88c0-033db1d2c9b7
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		lineageTag: b881b3c6-21ab-4b34-adee-425bcc707f4f
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: dcef2c3c-167e-4b49-9be9-aae8ee334754
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition stg_vehicles = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files(#"Source Folder"),
+				    #"D:\Air Purifier\data\raw\_vehicle_registrations_india csv1" = Source{[#"Folder Path"="D:\Air Purifier\data\raw\",Name="vehicle_registrations_india.csv"]}[Content],
+				    #"Imported CSV" = Csv.Document(#"D:\Air Purifier\data\raw\_vehicle_registrations_india csv1",[Delimiter=",", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"year", Int64.Type}, {"month", type text}, {"state", type text}, {"rto", type text}, {"vehicle_class", type text}, {"fuel", type text}, {"value", Int64.Type}, {"unit", type text}, {"note", type text}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type", "YearMonth", each Text.From([year]) & "-" & Text.Proper([month]))
+				in
+				    #"Added Custom"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

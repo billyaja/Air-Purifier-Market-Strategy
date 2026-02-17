@@ -1,0 +1,73 @@
+table Key_Meassures
+	lineageTag: 6f4b49e1-3316-42ab-b19d-cb8e9c433c14
+
+	measure 'Average AQI' = AVERAGE(stg_aqi[aqi_value])
+		formatString: 0.0
+		lineageTag: b00a0a8c-7a04-4dca-87a3-964e9637237d
+
+	measure 'Lifestyle EV Sales' = ```
+			
+			CALCULATE(
+			    SUM(stg_vehicles[value]),
+			    stg_vehicles[vehicle_class] IN {
+			        "MOTOR CAR", 
+			        "M-CYCLE/SCOOTER", 
+			        "M-CYCLE/SCOOTER-WITH SIDE CAR", 
+			        "THREE WHEELER (PERSONAL)",
+			        "PRIVATE SERVICE VEHICLE (INDIVIDUAL USE)"
+			    },
+			    stg_vehicles[fuel] IN {
+			        "ELECTRIC(BOV)", "PURE EV", "STRONG HYBRID EV", "PLUG-IN HYBRID EV"
+			    },
+			    stg_vehicles[year] >= 2022
+			)
+			```
+		formatString: 0.00
+		lineageTag: 9a471175-0406-41a5-854c-ca00c82225a2
+
+	measure 'Pollutant Volume' = COUNTROWS(stg_aqi)
+		formatString: 0
+		lineageTag: 99f2c1aa-7df9-4036-9676-e87e5f570832
+
+	measure 'Label for Events' =
+			
+			VAR CurrentMonth = SELECTEDVALUE('Dim_Date'[Month Name])
+			VAR EventText = LOOKUPVALUE('Event'[Event], 'Event'[Month Name], CurrentMonth)
+			RETURN
+			EventText
+		lineageTag: 2cc7b77c-68ff-48fe-861f-cd818ef2b5fd
+
+	measure 'Utility EV Sales' = ```
+			
+			CALCULATE(
+			    SUM(stg_vehicles[value]),
+			    NOT(stg_vehicles[vehicle_class] IN {
+			        "MOTOR CAR", 
+			        "M-CYCLE/SCOOTER", 
+			        "M-CYCLE/SCOOTER-WITH SIDE CAR", 
+			        "THREE WHEELER (PERSONAL)",
+			        "PRIVATE SERVICE VEHICLE (INDIVIDUAL USE)"
+			    }),
+			    stg_vehicles[year] >= 2022
+			)
+			```
+		formatString: 0
+		lineageTag: 05f24ec6-f648-4ea3-8aee-123a530b9eb9
+
+	column Column
+		formatString: 0
+		lineageTag: d0caedb1-b882-40c3-b935-ece04b3a3298
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Key_Meassures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = a947402a39d3435fa002ad41c260064a
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

@@ -1,0 +1,44 @@
+relationship AutoDetected_ed9e7470-6f57-4547-964b-63aabacba831
+	fromColumn: stg_aqi.state
+	toColumn: Dim_State.state
+
+relationship AutoDetected_f2e28906-7fa8-4cab-a429-474cc0c508ba
+	fromColumn: stg_vehicles.state
+	toColumn: Dim_State.state
+
+relationship d9ddc8e0-4737-6c97-8c59-8f398283dece
+	fromColumn: stg_health.state
+	toColumn: Dim_State.state
+
+relationship 717f71fd-999a-0e4c-a5f4-195317938729
+	fromColumn: stg_aqi.date
+	toColumn: Dim_Date.Date
+
+relationship fd16a5a5-bb1e-8802-dc2b-f89d45522cc8
+	fromColumn: stg_population.state
+	toColumn: Dim_State.state
+
+relationship AutoDetected_491c5d00-4e14-48ef-b603-be9ad182ba11
+	fromColumn: Dim_Date.YearWeek
+	toColumn: Dim_Week.YearWeek
+
+relationship AutoDetected_a3ff8d9c-ba57-4dfa-8d91-7dfd2bb49e3e
+	fromColumn: stg_vehicles.YearMonth
+	toColumn: Dim_Month.YearMonth
+
+relationship AutoDetected_33eb7130-47f2-4f85-b4c4-e0d1d9ec7352
+	fromColumn: Dim_Date.YearMonth
+	toColumn: Dim_Month.YearMonth
+
+relationship b57be3c9-d865-ae57-81cf-276c739ff354
+	fromColumn: stg_health.Year-Week
+	toColumn: Dim_Week.YearWeek
+
+relationship AutoDetected_ad536bb5-4e09-4969-81ad-3250c5947d0c
+	fromColumn: stg_population.YearMonth
+	toColumn: Dim_Month.YearMonth
+
+relationship 0fc448fa-5d80-bee5-ef56-0313049f7b6b
+	fromColumn: Dim_Date.'Month Name'
+	toColumn: Event.'Month Name'
+

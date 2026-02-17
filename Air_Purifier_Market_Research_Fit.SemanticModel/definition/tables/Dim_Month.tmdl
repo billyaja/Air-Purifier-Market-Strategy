@@ -1,0 +1,54 @@
+table Dim_Month
+	lineageTag: a3e5a11d-b756-4f8b-a2e5-908809480e8a
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: a5c5cb3b-445e-4624-aa85-0d0aad93bd9d
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 0acb3855-e1c4-466c-bf6f-fe2460d5ad62
+		summarizeBy: none
+		sourceColumn: Month Name
+		sortByColumn: 'Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: b0a023a9-5a5d-4bf7-9745-f7c34c87cf98
+		summarizeBy: sum
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: 14f07ebf-07fc-4034-86e7-9b915c0ba18e
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Month = m
+		mode: import
+		source =
+				let
+				    Source = Dim_Date,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Year", "Month Name", "Month Number", "YearMonth"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns")
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

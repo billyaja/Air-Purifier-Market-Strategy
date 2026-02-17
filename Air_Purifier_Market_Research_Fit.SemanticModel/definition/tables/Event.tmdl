@@ -1,0 +1,30 @@
+table Event
+	lineageTag: bf7fb74f-12a4-4558-8cf6-e165b2daed09
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: bc153bdc-5b07-42b2-829d-efac56ca5351
+		summarizeBy: none
+		sourceColumn: Month Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Event
+		dataType: string
+		lineageTag: 82b7a14e-afb7-4dc0-b823-370ba39b0313
+		summarizeBy: none
+		sourceColumn: Event
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Event = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WCk4tKEnNTUotUtJRCi4pSixJTc9MVvBJLM1LzlCK1YlW8ssvg8l7ZKZnpBaXKATk5+SUlmTm5ynFxgIA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Month Name" = _t, Event = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Month Name", type text}, {"Event", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

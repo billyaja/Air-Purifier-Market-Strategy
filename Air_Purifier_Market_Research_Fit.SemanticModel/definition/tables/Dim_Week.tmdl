@@ -1,0 +1,43 @@
+table Dim_Week
+	lineageTag: ee163a8b-6316-4f62-9686-0a596cb59177
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 61203499-74ee-4df9-bd4a-fe29a0628e89
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 2cef970a-0733-4bb0-a5b3-00d24c8beade
+		summarizeBy: sum
+		sourceColumn: Week Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearWeek
+		dataType: string
+		lineageTag: 418cac35-a439-4921-b907-75b38c714236
+		summarizeBy: none
+		sourceColumn: YearWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Week = m
+		mode: import
+		source =
+				let
+				    Source = Dim_Date,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Year", "Week Number", "YearWeek"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns")
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

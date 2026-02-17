@@ -1,0 +1,49 @@
+table Dim_State
+	lineageTag: fce14a4b-384c-49fa-94cd-87e496af115e
+
+	column state
+		dataType: string
+		lineageTag: f2585a08-a96e-411e-828a-5b62bb55a7d6
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_State = m
+		mode: import
+		source = ```
+				let
+				    // 1. Consolidate all unique state names from your staging tables
+				    SourceAQI = Table.SelectColumns(stg_aqi, {"state"}),
+				    SourceHealth = Table.SelectColumns(stg_health, {"state"}),
+				    // Add SourceVehicles and SourcePopulation here later if needed
+				    Combined = Table.Distinct(Table.Combine({SourceAQI, SourceHealth})),
+				    
+				    // 2. Standardize to Proper Case to fix "DELHI" vs "Delhi" issues
+				    #"Proper Case" = Table.TransformColumns(Combined, {{"state", each Text.Proper(Text.Trim(_))}}),
+				
+				    // 3. The "In-Line" Mapping Dictionary
+				    // This replaces your .xlsx requirement
+				    StateMapping = [
+				        #"Madhya" = "Madhya Pradesh",
+				        #"Uttar" = "Uttar Pradesh",
+				        #"Arunachal" = "Arunachal Pradesh",
+				        #"Dadra And Nagar Haveli" = "Dadra And Nagar Haveli And Daman And Diu",
+				        #"Daman And Diu" = "Dadra And Nagar Haveli And Daman And Diu"
+				    ],
+				
+				    // 4. Apply the mapping
+				    #"Mapped States" = Table.TransformColumns(#"Proper Case", {{"state", each Record.FieldOrDefault(StateMapping, _, _)}}),
+				
+				    // 5. Final Cleanup: Remove the "noise" and duplicates after mapping
+				    #"Removed Duplicates" = Table.Distinct(#"Mapped States"),
+				    #"Filtered Junk" = Table.SelectRows(#"Removed Duplicates", each ([state] <> "0" and [state] <> "1" and [state] <> "")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Filtered Junk",{{"state", type text}})
+				in
+				    #"Changed Type"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

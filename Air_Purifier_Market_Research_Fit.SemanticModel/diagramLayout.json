@@ -1,0 +1,158 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 709.95702911645333,
+            "y": 168.43619785134229
+          },
+          "nodeIndex": "Dim_State",
+          "nodeLineageTag": "fce14a4b-384c-49fa-94cd-87e496af115e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 2,
+          "expandedHeight": 104
+        },
+        {
+          "location": {
+            "x": 406.60401081899175,
+            "y": 47.133394118661386
+          },
+          "nodeIndex": "stg_aqi",
+          "nodeLineageTag": "595c4589-a638-4448-a307-892abd6021e2",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 3,
+          "expandedHeight": 296
+        },
+        {
+          "location": {
+            "x": 412.02830608202629,
+            "y": 209.58333333333323
+          },
+          "nodeIndex": "stg_health",
+          "nodeLineageTag": "b7c8eeaf-4ff8-463d-a0d3-cee0269ebfdd",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 4,
+          "expandedHeight": 300
+        },
+        {
+          "location": {
+            "x": 413.69497274869281,
+            "y": 535.24999745686853
+          },
+          "nodeIndex": "stg_population",
+          "nodeLineageTag": "25e29b51-d74c-4b65-b442-99a9d6953afa",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 5,
+          "expandedHeight": 320
+        },
+        {
+          "location": {
+            "x": 412.45970290511218,
+            "y": 367.67245520554474
+          },
+          "nodeIndex": "stg_vehicles",
+          "nodeLineageTag": "d3af08e4-680d-49ec-9587-008f5582c6f4",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 6,
+          "expandedHeight": 296
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 356.272585666259
+          },
+          "nodeIndex": "Dim_Date",
+          "nodeLineageTag": "b9f8c3ec-f1ee-4660-b816-82c3961dbdc0",
+          "size": {
+            "height": 312.10805789745962,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "Dim_Month",
+          "nodeLineageTag": "a3e5a11d-b756-4f8b-a2e5-908809480e8a",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 9,
+          "expandedHeight": 206
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 196.41666666666666
+          },
+          "nodeIndex": "Dim_Week",
+          "nodeLineageTag": "ee163a8b-6316-4f62-9686-0a596cb59177",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 8,
+          "expandedHeight": 152
+        },
+        {
+          "location": {
+            "x": 953.95702911645333,
+            "y": 298.33333206176763
+          },
+          "nodeIndex": "Key_Meassures",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 5,
+            "y": 710.95833206176769
+          },
+          "nodeIndex": "Event",
+          "nodeLineageTag": "bf7fb74f-12a4-4558-8cf6-e165b2daed09",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 60,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

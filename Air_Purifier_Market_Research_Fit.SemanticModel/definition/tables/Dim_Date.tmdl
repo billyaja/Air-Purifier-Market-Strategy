@@ -1,0 +1,108 @@
+table Dim_Date
+	lineageTag: b9f8c3ec-f1ee-4660-b816-82c3961dbdc0
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 2c1943de-60f1-4f2b-9266-24117a07dcc7
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: ac0bc536-4c52-4df3-88da-30eddf9f8864
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 489be000-3037-4d70-a2bd-0d21b8dda105
+		summarizeBy: none
+		sourceColumn: Month Name
+		sortByColumn: 'Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0948eefb-d9cd-4428-b280-732319896d7f
+		summarizeBy: sum
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: e17db958-1073-46d1-9d9c-8d39ae30bf65
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: d101c830-4bea-4e40-bd3b-4528031388d4
+		summarizeBy: sum
+		sourceColumn: Week Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearWeek
+		dataType: string
+		lineageTag: d55204dc-3a6d-406a-83d6-0c60e9e205ea
+		summarizeBy: none
+		sourceColumn: YearWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Type' = IF(WEEKDAY('Dim_Date'[Date], 2) > 5, "Weekend", "Weekday")
+		lineageTag: 5549c3df-b7da-4b78-906f-b683e020578e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Date = m
+		mode: import
+		source = ```
+				let
+				    // 1. Define range based on your data availability
+				    StartDate = #date(2011, 1, 1), 
+				    EndDate = #date(2026, 12, 31),
+				    NumberOfDays = Duration.Days(EndDate - StartDate) + 1,
+				    Source = List.Dates(StartDate, NumberOfDays, #duration(1,0,0,0)),
+				    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Date"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Date", type date}}),
+				
+				    // 2. Add attributes for Daily, Weekly, and Monthly linking
+				    #"Added Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([Date]), Int64.Type),
+				    #"Added Month Name" = Table.AddColumn(#"Added Year", "Month Name", each Date.MonthName([Date]), type text),
+				    #"Added Month Number" = Table.AddColumn(#"Added Month Name", "Month Number", each Date.Month([Date]), Int64.Type),
+				    
+				    // Create a Year-Month key for the Vehicle table (e.g., "2024-January")
+				    #"Added Year-Month" = Table.AddColumn(#"Added Month Number", "YearMonth", each Text.From([Year]) & "-" & [Month Name], type text),
+				
+				    // Create a Week-Year key for the Health table (e.g., "2024-W12")
+				    #"Added Week Number" = Table.AddColumn(#"Added Year-Month", "Week Number", each Date.WeekOfYear([Date]), Int64.Type),
+				    #"Added Year-Week" = Table.AddColumn(#"Added Week Number", "YearWeek", each Text.From([Year]) & "-W" & Text.PadStart(Text.From([Week Number]), 2, "0"), type text)
+				in
+				    #"Added Year-Week"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

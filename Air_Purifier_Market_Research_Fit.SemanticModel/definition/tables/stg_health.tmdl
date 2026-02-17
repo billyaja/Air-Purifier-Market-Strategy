@@ -1,0 +1,127 @@
+table stg_health
+	lineageTag: b7c8eeaf-4ff8-463d-a0d3-cee0269ebfdd
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: b7a7972e-15c4-4fc9-9e47-65cba6e3037c
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column week
+		dataType: string
+		lineageTag: 2b028d34-c917-46c7-b73c-bcd51630f1c3
+		summarizeBy: none
+		sourceColumn: week
+
+		annotation SummarizationSetBy = Automatic
+
+	column outbreak_starting_date
+		dataType: string
+		lineageTag: 5a95de9d-a2fd-4e8f-a798-154f2aa24d66
+		summarizeBy: none
+		sourceColumn: outbreak_starting_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column reporting_date
+		dataType: string
+		lineageTag: 54dc609f-39e8-4367-b232-fdb86b811884
+		summarizeBy: none
+		sourceColumn: reporting_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: ec70bb9d-c28e-450a-9e92-203eb0e04917
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: 07bd4db4-8665-4e24-83e1-2730443bb8f7
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column disease_illness_name
+		dataType: string
+		lineageTag: 8d4b8902-ee3e-4345-87c0-3baf3290468e
+		summarizeBy: none
+		sourceColumn: disease_illness_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 2f77bc4b-4522-46b1-84a3-9d6e4617ef29
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases
+		dataType: string
+		lineageTag: bc8e7c94-198f-4b15-b231-4c7ebbb0fdf3
+		summarizeBy: none
+		sourceColumn: cases
+
+		annotation SummarizationSetBy = Automatic
+
+	column deaths
+		dataType: string
+		lineageTag: bdd8feaa-741a-4e80-b3fa-5b1f06630462
+		summarizeBy: none
+		sourceColumn: deaths
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		lineageTag: a9cef935-2933-4510-a94b-e559adb3103e
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		lineageTag: fd4ae362-4fce-4103-bd39-83ef968e86f0
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Week
+		dataType: string
+		lineageTag: 11050359-63d7-47c9-9560-82529c661b91
+		summarizeBy: none
+		sourceColumn: Year-Week
+
+		annotation SummarizationSetBy = Automatic
+
+	partition stg_health = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files(#"Source Folder"),
+				    #"D:\Air Purifier\data\raw\_health_outbreaks_india csv1" = Source{[#"Folder Path"="D:\Air Purifier\data\raw\",Name="health_outbreaks_india.csv"]}[Content],
+				    #"Imported CSV" = Csv.Document(#"D:\Air Purifier\data\raw\_health_outbreaks_india csv1",[Delimiter=",", Columns=12, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Filtered Rows" = Table.SelectRows(#"Promoted Headers", each ([year] <> "m""" and [year] <> "uram""")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Filtered Rows",{{"year", Int64.Type}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Changed Type", each ([state] <> null and [state] <> "")),
+				    #"Added Custom" = Table.AddColumn(#"Filtered Rows1", "Year-Week", each Text.From([year]) & "-W" & Text.PadStart(Text.From([week]), 2, "0"))
+				in
+				    #"Added Custom"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,18 @@
+expression 'Source Folder' = "D:\Air Purifier\data\raw" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 3ef6f3d1-3884-45bf-8cb8-4ebb93c4713d
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression Query1 =
+		let
+		    Source = Folder.Files(#"Source Folder")
+		in
+		    Source
+	lineageTag: 0554290e-374f-46c6-89d6-527ab691aac6
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

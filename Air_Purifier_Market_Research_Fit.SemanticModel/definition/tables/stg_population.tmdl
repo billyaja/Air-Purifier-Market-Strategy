@@ -1,0 +1,88 @@
+table stg_population
+	lineageTag: 25e29b51-d74c-4b65-b442-99a9d6953afa
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 903a011d-7c89-4aec-be0b-f1c5e5480843
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: string
+		lineageTag: 7b089b8a-48c4-4f04-b267-22c697453095
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 64845e05-59c8-4c18-875c-37ae24d1d8fd
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: 23da0a79-e65d-4ed4-a1d1-5829c9f36966
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: int64
+		formatString: 0
+		lineageTag: af609272-9f29-43a2-9e48-59234261b0ef
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		lineageTag: 0a7954e3-e701-4894-bc7b-e0f77b98bd14
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column note
+		dataType: string
+		lineageTag: 76d259c7-b8f6-4136-9a2f-ba44d040e551
+		summarizeBy: none
+		sourceColumn: note
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: 5734075d-d782-4d17-b5e8-a9f6aab9aa21
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition stg_population = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files(#"Source Folder"),
+				    #"D:\Air Purifier\data\raw\_population_projections_india xlsx1" = Source{[#"Folder Path"="D:\Air Purifier\data\raw\",Name="population_projections_india.xlsx"]}[Content],
+				    #"Imported Excel Workbook" = Excel.Workbook(#"D:\Air Purifier\data\raw\_population_projections_india xlsx1"),
+				    sheet1_Sheet = #"Imported Excel Workbook"{[Item="sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"year", Int64.Type}, {"month", type text}, {"state", type text}, {"gender", type text}, {"value", Int64.Type}, {"unit", type text}, {"note", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([gender] = "Total")),
+				    #"Added Custom" = Table.AddColumn(#"Filtered Rows", "YearMonth", each Text.From([year]) & "-" & Text.Proper([month]))
+				in
+				    #"Added Custom"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
